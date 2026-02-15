@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hub IA - Quizz, Autoroute, Dorking</title>
+  <style>
+    :root {
+      --bg: #0b1220;
+      --bg-soft: #111a2d;
+      --text: #e5edf6;
+      --muted: #9cb0c5;
+      --line: #27334a;
+      --teal: #14b8a6;
+      --amber: #f59e0b;
+      --sky: #38bdf8;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "SF Pro Text", "Inter", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 20%, rgba(20, 184, 166, 0.22), transparent 30%),
+        radial-gradient(circle at 85% 5%, rgba(245, 158, 11, 0.18), transparent 28%),
+        radial-gradient(circle at 85% 90%, rgba(56, 189, 248, 0.18), transparent 32%),
+        var(--bg);
+      min-height: 100vh;
+    }
+
+    .wrap {
+      width: min(1100px, 92vw);
+      margin: 0 auto;
+    }
+
+    .hero {
+      padding: 64px 0 24px;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background: rgba(17, 26, 45, 0.65);
+      backdrop-filter: blur(6px);
+    }
+
+    h1 {
+      margin: 14px 0 10px;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+    }
+
+    .lead {
+      margin: 0;
+      max-width: 780px;
+      color: var(--muted);
+      font-size: clamp(1rem, 2vw, 1.15rem);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .stat {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      background: rgba(17, 26, 45, 0.7);
+      backdrop-filter: blur(6px);
+    }
+
+    .stat b { font-size: 1.5rem; }
+    .stat span { display: block; color: var(--muted); font-size: 0.9rem; margin-top: 4px; }
+
+    .projects {
+      padding: 18px 0 40px;
+    }
+
+    .section-title {
+      margin: 0 0 16px;
+      font-size: 1.3rem;
+      letter-spacing: -0.01em;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, rgba(17, 26, 45, 0.92), rgba(10, 16, 30, 0.92));
+      display: flex;
+      flex-direction: column;
+      min-height: 250px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--teal);
+      box-shadow: 0 0 0 0 rgba(20, 184, 166, 0.6);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(20, 184, 166, 0.55); }
+      70% { box-shadow: 0 0 0 12px rgba(20, 184, 166, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(20, 184, 166, 0); }
+    }
+
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 1.25rem;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .links {
+      margin-top: auto;
+      display: flex;
+      gap: 10px;
+      padding-top: 16px;
+    }
+
+    .btn {
+      appearance: none;
+      border: 1px solid var(--line);
+      color: var(--text);
+      text-decoration: none;
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.92rem;
+      transition: transform 0.18s ease, border-color 0.18s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      border-color: #3a4f72;
+    }
+
+    .btn.primary {
+      background: linear-gradient(135deg, var(--teal), var(--sky));
+      color: #08242a;
+      border: none;
+    }
+
+    .notes {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px;
+      color: var(--muted);
+      margin-bottom: 48px;
+      background: rgba(17, 26, 45, 0.5);
+    }
+
+    .notes code {
+      color: #bae6fd;
+      background: rgba(8, 15, 27, 0.85);
+      border: 1px solid #1f2d45;
+      border-radius: 8px;
+      padding: 2px 6px;
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      padding: 18px 0 24px;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 960px) {
+      .grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 680px) {
+      .stats { grid-template-columns: 1fr; }
+      .grid { grid-template-columns: 1fr; }
+      .hero { padding-top: 42px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <span class="eyebrow">Hub principal</span>
+      <h1>Portail des projets IA</h1>
+      <p class="lead">
+        Ce site centralise les 3 applications publiees sur GitHub Pages: Quizz, Autoroute et Dorking.
+      </p>
+      <div class="stats">
+        <article class="stat"><b id="stat-projects">3</b><span>Projets relies</span></article>
+        <article class="stat"><b id="stat-online">3</b><span>Pages actives</span></article>
+        <article class="stat"><b>1</b><span>Point d'entree unique</span></article>
+      </div>
+    </div>
+  </header>
+
+  <main class="projects">
+    <div class="wrap">
+      <h2 class="section-title">Applications</h2>
+      <section id="project-grid" class="grid" aria-live="polite"></section>
+
+      <div class="notes">
+        Les cartes ci-dessus sont alimentees par <code>data/apps.json</code>.
+        Pour ajouter un nouveau projet, ajoutez un objet JSON avec <code>title</code>, <code>url</code> et <code>repo</code>.
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      Hub public GitHub Pages | Mainteneur: Chab974
+    </div>
+  </footer>
+
+  <script>
+    const fallbackApps = [
+      {
+        id: "quiz",
+        title: "Quizz IA",
+        description: "Module d'evaluation et de revision autour de l'IA.",
+        url: "https://chab974.github.io/quizz-IA/",
+        repo: "https://github.com/Chab974/quizz-IA"
+      },
+      {
+        id: "autoroute",
+        title: "IA: Notre Nouvelle Autoroute",
+        description: "Presentation immersive sur l'adoption de l'IA, ses usages et ses limites.",
+        url: "https://chab974.github.io/ia-notre-nouvelle-autoroute/",
+        repo: "https://github.com/Chab974/ia-notre-nouvelle-autoroute"
+      },
+      {
+        id: "dorking",
+        title: "Laboratoire Google Dorking",
+        description: "Tutoriel interactif OSINT / recherche avancee avec scenarios et outils.",
+        url: "https://chab974.github.io/laboratoire-google-dorking-osint/",
+        repo: "https://github.com/Chab974/laboratoire-google-dorking-osint"
+      }
+    ];
+
+    function cardTemplate(app) {
+      return `
+        <article class="card">
+          <span class="badge"><span class="dot"></span>En ligne</span>
+          <h3>${app.title}</h3>
+          <p>${app.description}</p>
+          <div class="links">
+            <a class="btn primary" href="${app.url}" target="_blank" rel="noopener noreferrer">Ouvrir le site</a>
+            <a class="btn" href="${app.repo}" target="_blank" rel="noopener noreferrer">Repo</a>
+          </div>
+        </article>
+      `;
+    }
+
+    async function loadApps() {
+      try {
+        const response = await fetch("./data/apps.json", { cache: "no-store" });
+        if (!response.ok) throw new Error("apps.json unavailable");
+        return await response.json();
+      } catch (error) {
+        return fallbackApps;
+      }
+    }
+
+    async function render() {
+      const apps = await loadApps();
+      const grid = document.getElementById("project-grid");
+      grid.innerHTML = apps.map(cardTemplate).join("");
+      document.getElementById("stat-projects").textContent = String(apps.length);
+      document.getElementById("stat-online").textContent = String(apps.length);
+    }
+
+    render();
+  </script>
+</body>
+</html>
