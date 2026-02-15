@@ -4,7 +4,7 @@ INSERT INTO sites (
     id, title, description, url, repo, active, sort_order, created_at, updated_at
 ) VALUES
     ('hub', 'Site principal', 'Portail central des projets IA.', 'https://chab974.github.io/site-principal/', 'https://github.com/Chab974/site-principal', 0, 0, '2026-02-15T00:00:00Z', '2026-02-15T00:00:00Z'),
-    ('autoroute', 'IA: Notre Nouvelle Autoroute', 'Presentation immersive sur l''adoption de l''IA, ses usages et ses limites.', 'https://chab974.github.io/ia-notre-nouvelle-autoroute/', 'https://github.com/Chab974/ia-notre-nouvelle-autoroute', 1, 1, '2026-02-15T00:00:00Z', '2026-02-15T00:00:00Z'),
+    ('autoroute', 'IA: Notre Nouvelle Auto-ecole', 'Presentation immersive sur l''adoption de l''IA, ses usages et ses limites.', 'https://chab974.github.io/ia-notre-nouvelle-autoroute/', 'https://github.com/Chab974/ia-notre-nouvelle-autoroute', 1, 1, '2026-02-15T00:00:00Z', '2026-02-15T00:00:00Z'),
     ('quiz', 'Quizz IA', 'Module d''evaluation et de revision autour de l''IA.', 'https://chab974.github.io/quizz-IA/', 'https://github.com/Chab974/quizz-IA', 1, 2, '2026-02-15T00:00:00Z', '2026-02-15T00:00:00Z'),
     ('neurones', 'Reseau de Neurones Spatial', 'Simulation guidee avec dessin libre et apprentissage interactif des chiffres.', 'https://chab974.github.io/reseau-neurones-spatial-guide/', 'https://github.com/Chab974/reseau-neurones-spatial-guide', 1, 3, '2026-02-15T00:00:00Z', '2026-02-15T00:00:00Z'),
     ('dorking', 'Laboratoire Google Dorking', 'Tutoriel interactif OSINT / recherche avancee avec scenarios et outils.', 'https://chab974.github.io/laboratoire-google-dorking-osint/', 'https://github.com/Chab974/laboratoire-google-dorking-osint', 1, 4, '2026-02-15T00:00:00Z', '2026-02-15T00:00:00Z')
