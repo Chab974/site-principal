@@ -220,11 +220,11 @@
       <span class="eyebrow">Hub principal</span>
       <h1>Portail des projets IA</h1>
       <p class="lead">
-        Ce site centralise les 3 applications publiees sur GitHub Pages: Quizz, Autoroute et Dorking.
+        Ce site centralise les <span id="hero-app-count">4</span> applications publiees sur GitHub Pages.
       </p>
       <div class="stats">
-        <article class="stat"><b id="stat-projects">3</b><span>Projets relies</span></article>
-        <article class="stat"><b id="stat-online">3</b><span>Pages actives</span></article>
+        <article class="stat"><b id="stat-projects">4</b><span>Projets relies</span></article>
+        <article class="stat"><b id="stat-online">4</b><span>Pages actives</span></article>
         <article class="stat"><b>1</b><span>Point d'entree unique</span></article>
       </div>
     </div>
@@ -270,6 +270,13 @@
         description: "Tutoriel interactif OSINT / recherche avancee avec scenarios et outils.",
         url: "https://chab974.github.io/laboratoire-google-dorking-osint/",
         repo: "https://github.com/Chab974/laboratoire-google-dorking-osint"
+      },
+      {
+        id: "neurones",
+        title: "Reseau de Neurones Spatial",
+        description: "Simulation guidee avec dessin libre et apprentissage interactif des chiffres.",
+        url: "https://chab974.github.io/reseau-neurones-spatial-guide/",
+        repo: "https://github.com/Chab974/reseau-neurones-spatial-guide"
       }
     ];
 
@@ -303,6 +310,7 @@
       grid.innerHTML = apps.map(cardTemplate).join("");
       document.getElementById("stat-projects").textContent = String(apps.length);
       document.getElementById("stat-online").textContent = String(apps.length);
+      document.getElementById("hero-app-count").textContent = String(apps.length);
     }
 
     render();
