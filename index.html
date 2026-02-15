@@ -93,6 +93,24 @@
       font-size: 1.3rem;
       letter-spacing: -0.01em;
     }
+    .narrative {
+      margin: 0 0 18px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px;
+      color: var(--muted);
+      background: rgba(17, 26, 45, 0.5);
+      line-height: 1.55;
+    }
+    .narrative p {
+      margin: 0;
+    }
+    .narrative p + p {
+      margin-top: 10px;
+    }
+    .narrative strong {
+      color: var(--text);
+    }
 
     .grid {
       display: grid;
@@ -233,6 +251,10 @@
   <main class="projects">
     <div class="wrap">
       <h2 class="section-title">Applications</h2>
+      <div class="narrative">
+        <p><strong>Pourquoi cette page ?</strong> Ce portail existe pour rassembler des projets qui vivaient dans des depots differents, sans point d'entree unique.</p>
+        <p>Il centralise les liens publics, maintient une navigation commune, et simplifie la maintenance: une mise a jour de contenu se propage ensuite sur tout l'ecosysteme.</p>
+      </div>
       <section id="project-grid" class="grid" aria-live="polite"></section>
 
       <div class="notes">
