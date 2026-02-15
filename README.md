@@ -7,6 +7,14 @@ Hub principal pour centraliser les projets GitHub Pages:
 - Laboratoire Google Dorking
 - Reseau de Neurones Spatial
 
+## URLs des sites
+
+- Hub principal: `https://chab974.github.io/site-principal/`
+- Quizz IA: `https://chab974.github.io/quizz-IA/`
+- Autoroute IA: `https://chab974.github.io/ia-notre-nouvelle-autoroute/`
+- Dorking Lab: `https://chab974.github.io/laboratoire-google-dorking-osint/`
+- Reseau de Neurones Spatial: `https://chab974.github.io/reseau-neurones-spatial-guide/`
+
 ## Structure
 
 - `index.html`: page d'accueil du hub

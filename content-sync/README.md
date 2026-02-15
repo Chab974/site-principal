@@ -7,6 +7,14 @@ Source de verite SQLite pour le contenu partage du portail:
 
 Ce dossier contient le schema SQL, le seed initial et les scripts d'export.
 
+## URLs des sites cibles
+
+- Hub principal: `https://chab974.github.io/site-principal/`
+- Quizz IA: `https://chab974.github.io/quizz-IA/`
+- Autoroute IA: `https://chab974.github.io/ia-notre-nouvelle-autoroute/`
+- Dorking Lab: `https://chab974.github.io/laboratoire-google-dorking-osint/`
+- Reseau de Neurones Spatial: `https://chab974.github.io/reseau-neurones-spatial-guide/`
+
 ## Arborescence
 
 - `migrations/001_init.sql`: schema SQLite
@@ -54,4 +62,3 @@ Pour rollback, recopier ces fichiers vers:
 
 - `menu/menu.json`
 - `data/apps.json`
-
