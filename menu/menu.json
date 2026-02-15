@@ -7,24 +7,24 @@
       "url": "https://chab974.github.io/site-principal/"
     },
     {
+      "id": "autoroute",
+      "label": "Auto ecole de l'IA",
+      "url": "https://chab974.github.io/ia-notre-nouvelle-autoroute/"
+    },
+    {
       "id": "quiz",
       "label": "Quizz IA",
       "url": "https://chab974.github.io/quizz-IA/"
     },
     {
-      "id": "autoroute",
-      "label": "Autoroute IA",
-      "url": "https://chab974.github.io/ia-notre-nouvelle-autoroute/"
+      "id": "neurones",
+      "label": "Reseau Neurones",
+      "url": "https://chab974.github.io/reseau-neurones-spatial-guide/"
     },
     {
       "id": "dorking",
       "label": "Dorking Lab",
       "url": "https://chab974.github.io/laboratoire-google-dorking-osint/"
-    },
-    {
-      "id": "neurones",
-      "label": "Reseau Neurones",
-      "url": "https://chab974.github.io/reseau-neurones-spatial-guide/"
     }
   ]
 }

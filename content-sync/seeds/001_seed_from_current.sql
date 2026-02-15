@@ -27,10 +27,10 @@ INSERT INTO menu_items (
     id, menu_id, site_id, label, sort_order, visible, created_at, updated_at
 ) VALUES
     ('mi_hub', 'main', 'hub', 'Site principal', 1, 1, '2026-02-15T00:00:00Z', '2026-02-15T00:00:00Z'),
-    ('mi_quiz', 'main', 'quiz', 'Quizz IA', 2, 1, '2026-02-15T00:00:00Z', '2026-02-15T00:00:00Z'),
-    ('mi_autoroute', 'main', 'autoroute', 'Autoroute IA', 3, 1, '2026-02-15T00:00:00Z', '2026-02-15T00:00:00Z'),
-    ('mi_dorking', 'main', 'dorking', 'Dorking Lab', 4, 1, '2026-02-15T00:00:00Z', '2026-02-15T00:00:00Z'),
-    ('mi_neurones', 'main', 'neurones', 'Reseau Neurones', 5, 1, '2026-02-15T00:00:00Z', '2026-02-15T00:00:00Z')
+    ('mi_autoroute', 'main', 'autoroute', 'Auto ecole de l''IA', 2, 1, '2026-02-15T00:00:00Z', '2026-02-15T00:00:00Z'),
+    ('mi_quiz', 'main', 'quiz', 'Quizz IA', 3, 1, '2026-02-15T00:00:00Z', '2026-02-15T00:00:00Z'),
+    ('mi_neurones', 'main', 'neurones', 'Reseau Neurones', 4, 1, '2026-02-15T00:00:00Z', '2026-02-15T00:00:00Z'),
+    ('mi_dorking', 'main', 'dorking', 'Dorking Lab', 5, 1, '2026-02-15T00:00:00Z', '2026-02-15T00:00:00Z')
 ON CONFLICT(id) DO UPDATE SET
     menu_id = excluded.menu_id,
     site_id = excluded.site_id,
