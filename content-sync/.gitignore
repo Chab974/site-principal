@@ -1,0 +1,5 @@
+.local/
+snapshots/*
+!snapshots/.gitkeep
+scripts/__pycache__/
+
