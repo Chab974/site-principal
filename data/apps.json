@@ -19,5 +19,12 @@
     "description": "Tutoriel interactif OSINT / recherche avancee avec scenarios et outils.",
     "url": "https://chab974.github.io/laboratoire-google-dorking-osint/",
     "repo": "https://github.com/Chab974/laboratoire-google-dorking-osint"
+  },
+  {
+    "id": "neurones",
+    "title": "Reseau de Neurones Spatial",
+    "description": "Simulation guidee avec dessin libre et apprentissage interactif des chiffres.",
+    "url": "https://chab974.github.io/reseau-neurones-spatial-guide/",
+    "repo": "https://github.com/Chab974/reseau-neurones-spatial-guide"
   }
 ]
