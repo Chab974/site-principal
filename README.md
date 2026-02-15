@@ -9,7 +9,7 @@ Hub principal pour centraliser les projets GitHub Pages:
 
 ## URLs des sites
 
-- Hub principal: `https://chab974.github.io/site-principal/`
+- Hub principal: [[https://chab974.github.io/site-principal/]]
 - Quizz IA: `https://chab974.github.io/quizz-IA/`
 - Autoroute IA: `https://chab974.github.io/ia-notre-nouvelle-autoroute/`
 - Dorking Lab: `https://chab974.github.io/laboratoire-google-dorking-osint/`
