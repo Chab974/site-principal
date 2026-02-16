@@ -14,6 +14,10 @@
       --teal: #14b8a6;
       --amber: #f59e0b;
       --sky: #38bdf8;
+      --tv-red: #ef4444;
+      --tv-red-soft: rgba(239, 68, 68, 0.18);
+      --tv-ink: #070c18;
+      --tv-glow: rgba(56, 189, 248, 0.25);
     }
 
     * { box-sizing: border-box; }
@@ -206,6 +210,427 @@
       background: rgba(17, 26, 45, 0.5);
     }
 
+    .feed-tv {
+      padding: 4px 0 52px;
+    }
+
+    .feed-tv-intro {
+      margin: 0 0 18px;
+      color: var(--muted);
+      max-width: 850px;
+      line-height: 1.45;
+    }
+
+    .tv-shell {
+      border: 1px solid #2d3a54;
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(239, 68, 68, 0.12), transparent 34%),
+        radial-gradient(circle at 100% 0%, rgba(56, 189, 248, 0.14), transparent 36%),
+        linear-gradient(180deg, rgba(11, 18, 33, 0.96), rgba(7, 12, 24, 0.98));
+      padding: 20px;
+      box-shadow: 0 34px 90px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tv-shell::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      border: 1px solid rgba(56, 189, 248, 0.18);
+      pointer-events: none;
+    }
+
+    .tv-shell::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.018) 0px,
+        rgba(255, 255, 255, 0.018) 1px,
+        rgba(0, 0, 0, 0.018) 2px,
+        rgba(0, 0, 0, 0.018) 3px
+      );
+      opacity: 0.35;
+    }
+
+    .tv-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: center;
+      margin-bottom: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .tv-head-left {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .tv-head-right {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .tv-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      border: 1px solid rgba(239, 68, 68, 0.55);
+      background: var(--tv-red-soft);
+      color: #fecaca;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    .tv-live::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--tv-red);
+      box-shadow: 0 0 9px rgba(239, 68, 68, 0.9);
+      animation: tvBlink 1.1s steps(2, start) infinite;
+    }
+
+    .tv-breaking {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      background: rgba(56, 189, 248, 0.14);
+      color: #cfefff;
+      padding: 7px 11px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .tv-clock {
+      border: 1px solid #31476a;
+      border-radius: 10px;
+      padding: 7px 9px;
+      font-family: "Consolas", "Menlo", monospace;
+      color: #dff6ff;
+      background: rgba(7, 14, 27, 0.8);
+      font-size: 0.84rem;
+    }
+
+    .tv-source {
+      font-size: 0.82rem;
+      color: #aec1d8;
+      border: 1px solid #273d60;
+      border-radius: 10px;
+      padding: 7px 9px;
+      background: rgba(9, 17, 32, 0.78);
+    }
+
+    .tv-layout {
+      display: grid;
+      grid-template-columns: 1.55fr 1fr;
+      gap: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .tv-screen {
+      border: 1px solid #2f486f;
+      border-radius: 16px;
+      padding: 20px;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(56, 189, 248, 0.11), transparent 35%),
+        linear-gradient(160deg, rgba(6, 12, 23, 0.98), rgba(10, 17, 30, 0.96));
+      min-height: 292px;
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tv-screen::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.045) 50%, transparent 70%);
+      transform: translateX(-110%);
+      animation: tvShine 5.6s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes tvShine {
+      0%, 20% { transform: translateX(-110%); }
+      40%, 100% { transform: translateX(110%); }
+    }
+
+    .tv-channel {
+      display: inline-flex;
+      width: fit-content;
+      border-radius: 999px;
+      border: 1px solid #33496d;
+      color: #b9d1ee;
+      background: rgba(7, 15, 31, 0.88);
+      padding: 5px 10px;
+      font-size: 12px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      position: relative;
+      z-index: 1;
+    }
+
+    .tv-screen h3 {
+      margin: 0;
+      font-size: clamp(1.2rem, 2vw, 1.72rem);
+      line-height: 1.24;
+      position: relative;
+      z-index: 1;
+      text-wrap: balance;
+    }
+
+    .tv-meta {
+      margin: 0;
+      color: #9bb5d2;
+      font-size: 0.86rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      position: relative;
+      z-index: 1;
+    }
+
+    .tv-desc {
+      margin: 0;
+      color: #d5e3f3;
+      line-height: 1.5;
+      position: relative;
+      z-index: 1;
+    }
+
+    .tv-signal {
+      margin-top: auto;
+      border: 1px solid #2d4568;
+      border-radius: 999px;
+      background: rgba(9, 17, 33, 0.7);
+      height: 7px;
+      overflow: hidden;
+      position: relative;
+      z-index: 1;
+    }
+
+    #tv-signal-bar {
+      display: block;
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(90deg, #0ea5e9, #22d3ee, #34d399);
+      transform-origin: left center;
+      animation: tvSignal 7s linear infinite;
+    }
+
+    @keyframes tvSignal {
+      0% { transform: scaleX(0); }
+      100% { transform: scaleX(1); }
+    }
+
+    .tv-actions {
+      margin-top: 12px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 1;
+    }
+
+    .tv-playlist {
+      border: 1px solid #30476c;
+      border-radius: 16px;
+      padding: 10px;
+      background: linear-gradient(180deg, rgba(8, 14, 28, 0.92), rgba(8, 14, 25, 0.78));
+      max-height: 332px;
+      overflow: auto;
+    }
+
+    .tv-playlist::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .tv-playlist::-webkit-scrollbar-thumb {
+      background: #314866;
+      border-radius: 999px;
+    }
+
+    .tv-item {
+      width: 100%;
+      text-align: left;
+      border: 1px solid transparent;
+      border-left: 3px solid transparent;
+      border-radius: 11px;
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--text);
+      padding: 10px 10px 10px 11px;
+      margin: 0 0 8px;
+      cursor: pointer;
+      transition: border-color 0.18s ease, transform 0.18s ease, background 0.18s ease;
+      font: inherit;
+    }
+
+    .tv-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .tv-item:hover,
+    .tv-item:focus-visible {
+      border-color: #3a567f;
+      background: rgba(56, 189, 248, 0.11);
+      transform: translateX(2px);
+      outline: none;
+    }
+
+    .tv-item.active {
+      border-color: #3ca6d8;
+      border-left-color: #38bdf8;
+      background: rgba(56, 189, 248, 0.16);
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.15) inset;
+    }
+
+    .tv-item b {
+      display: block;
+      font-size: 0.92rem;
+      line-height: 1.35;
+      margin-bottom: 4px;
+    }
+
+    .tv-item span {
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .tv-controls {
+      margin-top: 13px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      position: relative;
+      z-index: 1;
+      padding: 10px;
+      border: 1px solid #283c5b;
+      border-radius: 12px;
+      background: rgba(8, 14, 27, 0.76);
+    }
+
+    .tv-buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .tv-btn {
+      appearance: none;
+      border: 1px solid #324a6e;
+      border-radius: 10px;
+      padding: 9px 12px;
+      background: linear-gradient(180deg, rgba(14, 23, 40, 0.95), rgba(11, 19, 34, 0.92));
+      color: #e2eefb;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .tv-btn:hover,
+    .tv-btn:focus-visible {
+      border-color: #4b74ad;
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.14);
+      transform: translateY(-1px);
+      outline: none;
+    }
+
+    .tv-status {
+      margin: 0;
+      font-size: 0.85rem;
+      color: #bad0e6;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tv-state-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #10b981;
+      box-shadow: 0 0 8px rgba(16, 185, 129, 0.8);
+      flex: 0 0 8px;
+    }
+
+    .tv-state-dot.paused {
+      background: #f59e0b;
+      box-shadow: 0 0 8px rgba(245, 158, 11, 0.75);
+    }
+
+    .tv-ticker {
+      margin-top: 14px;
+      border: 1px solid #243957;
+      border-radius: 12px;
+      overflow: hidden;
+      background: linear-gradient(90deg, rgba(134, 11, 20, 0.76), rgba(8, 12, 23, 0.84));
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: auto 1fr;
+    }
+
+    .tv-ticker-label {
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(239, 68, 68, 0.18);
+      color: #ffe4e6;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 12px;
+      min-height: 42px;
+      white-space: nowrap;
+    }
+
+    .tv-ticker-track-wrap {
+      overflow: hidden;
+    }
+
+    .tv-ticker-track {
+      display: inline-block;
+      white-space: nowrap;
+      padding: 10px 0;
+      color: #d8ebff;
+      animation: tickerMove var(--ticker-duration, 36s) linear infinite;
+      will-change: transform;
+    }
+
+    @keyframes tickerMove {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    @keyframes tvBlink {
+      to { opacity: 0.4; }
+    }
+
     .notes code {
       color: #bae6fd;
       background: rgba(8, 15, 27, 0.85);
@@ -223,12 +648,35 @@
 
     @media (max-width: 960px) {
       .grid { grid-template-columns: 1fr 1fr; }
+      .tv-layout { grid-template-columns: 1fr; }
+      .tv-playlist { max-height: 230px; }
+      .tv-head {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .tv-head-right {
+        justify-content: flex-start;
+      }
     }
 
     @media (max-width: 680px) {
       .stats { grid-template-columns: 1fr; }
       .grid { grid-template-columns: 1fr; }
       .hero { padding-top: 42px; }
+      .tv-controls {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .tv-shell {
+        padding: 16px;
+      }
+      .tv-ticker {
+        grid-template-columns: 1fr;
+      }
+      .tv-ticker-label {
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
     }
   </style>
 </head>
@@ -263,6 +711,59 @@
       </div>
     </div>
   </main>
+
+  <section class="feed-tv" aria-labelledby="feed-tv-title">
+    <div class="wrap">
+      <h2 class="section-title" id="feed-tv-title">Flux Crypto en direct</h2>
+      <p class="feed-tv-intro">
+        Vue TV interactive du flux <strong>LeLezard crypto-monnaies</strong> : navigation canal par canal, defilement automatique et bandeau continu.
+      </p>
+
+      <article class="tv-shell">
+        <div class="tv-head">
+          <div class="tv-head-left">
+            <div class="tv-live">Live</div>
+            <div class="tv-breaking">Breaking crypto</div>
+          </div>
+          <div class="tv-head-right">
+            <span class="tv-clock" id="tv-clock">--:--:--</span>
+            <span class="tv-source" id="tv-feed-source">Chargement de la source...</span>
+          </div>
+        </div>
+
+        <div class="tv-layout">
+          <section class="tv-screen" aria-live="polite">
+            <span class="tv-channel" id="tv-channel-indicator">Canal 1</span>
+            <h3 id="tv-headline">Chargement des titres crypto...</h3>
+            <p class="tv-meta" id="tv-meta">Mise a jour en cours</p>
+            <p class="tv-desc" id="tv-description">Connexion au flux RSS LeLezard en cours.</p>
+            <div class="tv-signal"><span id="tv-signal-bar"></span></div>
+            <div class="tv-actions">
+              <a class="btn primary" id="tv-open-link" href="https://www.lelezard.com/communiques-rss/crypto-monnaies" target="_blank" rel="noopener noreferrer">Lire la source</a>
+            </div>
+          </section>
+
+          <aside class="tv-playlist" id="tv-playlist" aria-label="Playlist des titres crypto"></aside>
+        </div>
+
+        <div class="tv-controls">
+          <div class="tv-buttons">
+            <button type="button" class="tv-btn" id="tv-prev">Canal precedent</button>
+            <button type="button" class="tv-btn" id="tv-next">Canal suivant</button>
+            <button type="button" class="tv-btn" id="tv-toggle-autoplay" aria-pressed="true">Pause auto</button>
+          </div>
+          <p class="tv-status"><span class="tv-state-dot" id="tv-state-dot"></span><span id="tv-status">Initialisation du flux...</span></p>
+        </div>
+
+        <div class="tv-ticker" aria-hidden="true">
+          <div class="tv-ticker-label">Ticker</div>
+          <div class="tv-ticker-track-wrap">
+            <div class="tv-ticker-track" id="tv-ticker-track"></div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
 
   <footer>
     <div class="wrap">
@@ -335,7 +836,276 @@
       document.getElementById("hero-app-count").textContent = String(apps.length);
     }
 
-    render();
+    const cryptoFeedUrl = "https://www.lelezard.com/communiques-rss/crypto-monnaies";
+    const fallbackFeed = [
+      {
+        title: "Bitcoin et Ethereum gardent un marche nerveux",
+        link: cryptoFeedUrl,
+        pubDate: new Date().toISOString(),
+        description: "Surveillance locale activee: impossible de charger le flux distant pour le moment."
+      },
+      {
+        title: "Adoption institutionnelle: hausse des annonces de produits crypto",
+        link: cryptoFeedUrl,
+        pubDate: new Date().toISOString(),
+        description: "Le hub conserve un mode degrade avec lecture locale en attendant la source live."
+      },
+      {
+        title: "Regulation: la conformite devient un facteur cle des plateformes",
+        link: cryptoFeedUrl,
+        pubDate: new Date().toISOString(),
+        description: "Les emissions de communiques montrent une priorite sur la transparence et les reserves."
+      }
+    ];
+
+    const tvState = {
+      items: [],
+      index: 0,
+      autoplay: true,
+      timer: null
+    };
+
+    function cleanText(raw, max = 220) {
+      const plain = String(raw || "")
+        .replace(/<[^>]*>/g, " ")
+        .replace(/&nbsp;/gi, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+      if (!plain) return "Aucun resume disponible.";
+      return plain.length > max ? `${plain.slice(0, max - 1)}...` : plain;
+    }
+
+    function formatDate(dateValue) {
+      if (!dateValue) return "Date inconnue";
+      const parsed = new Date(dateValue);
+      if (Number.isNaN(parsed.getTime())) return "Date inconnue";
+      return new Intl.DateTimeFormat("fr-FR", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+      }).format(parsed);
+    }
+
+    function normalizeItem(item) {
+      return {
+        title: cleanText(item.title, 120),
+        link: item.link || cryptoFeedUrl,
+        pubDate: item.pubDate || item.pubDateUtc || "",
+        description: cleanText(item.description || item.content || item.contentSnippet, 240)
+      };
+    }
+
+    async function loadCryptoFeed() {
+      const rssToJson = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(cryptoFeedUrl)}&count=12`;
+      try {
+        const response = await fetch(rssToJson, { cache: "no-store" });
+        if (!response.ok) throw new Error("rss2json unavailable");
+        const payload = await response.json();
+        if (payload.status !== "ok" || !Array.isArray(payload.items) || payload.items.length === 0) {
+          throw new Error("rss2json returned empty data");
+        }
+        return {
+          items: payload.items.slice(0, 12).map(normalizeItem),
+          source: "LeLezard RSS via rss2json",
+          fallback: false
+        };
+      } catch (firstError) {
+        try {
+          const allOrigins = `https://api.allorigins.win/raw?url=${encodeURIComponent(cryptoFeedUrl)}`;
+          const xmlResponse = await fetch(allOrigins, { cache: "no-store" });
+          if (!xmlResponse.ok) throw new Error("allorigins unavailable");
+          const xmlText = await xmlResponse.text();
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(xmlText, "application/xml");
+          const nodes = Array.from(doc.querySelectorAll("item")).slice(0, 12);
+          if (nodes.length === 0) throw new Error("rss xml parse failed");
+          const parsedItems = nodes.map((node) =>
+            normalizeItem({
+              title: node.querySelector("title")?.textContent || "",
+              link: node.querySelector("link")?.textContent || cryptoFeedUrl,
+              pubDate: node.querySelector("pubDate")?.textContent || "",
+              description: node.querySelector("description")?.textContent || ""
+            })
+          );
+          return {
+            items: parsedItems,
+            source: "LeLezard RSS via allorigins",
+            fallback: false
+          };
+        } catch (secondError) {
+          return {
+            items: fallbackFeed.map(normalizeItem),
+            source: "Selection locale (mode degrade)",
+            fallback: true
+          };
+        }
+      }
+    }
+
+    function setTicker(items) {
+      const track = document.getElementById("tv-ticker-track");
+      const headlines = items.map((item) => item.title).join("  \u25cf  ");
+      const doubled = `${headlines}  \u25cf  ${headlines}`;
+      track.textContent = doubled;
+      const duration = Math.max(28, items.length * 5);
+      track.style.setProperty("--ticker-duration", `${duration}s`);
+    }
+
+    function updateTvClock() {
+      const clockNode = document.getElementById("tv-clock");
+      if (!clockNode) return;
+      const now = new Date();
+      clockNode.textContent = new Intl.DateTimeFormat("fr-FR", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+      }).format(now);
+    }
+
+    function syncAutoplayUi() {
+      const dot = document.getElementById("tv-state-dot");
+      const signal = document.getElementById("tv-signal-bar");
+      if (dot) dot.classList.toggle("paused", !tvState.autoplay);
+      if (signal) signal.style.animationPlayState = tvState.autoplay ? "running" : "paused";
+    }
+
+    function stopAutoplay() {
+      if (tvState.timer) {
+        clearInterval(tvState.timer);
+        tvState.timer = null;
+      }
+    }
+
+    function updateTvMain() {
+      if (!tvState.items.length) return;
+      const item = tvState.items[tvState.index];
+      document.getElementById("tv-channel-indicator").textContent = `Canal ${tvState.index + 1}/${tvState.items.length}`;
+      document.getElementById("tv-headline").textContent = item.title;
+      document.getElementById("tv-meta").textContent = `Source: LeLezard | ${formatDate(item.pubDate)}`;
+      document.getElementById("tv-description").textContent = item.description;
+      document.getElementById("tv-open-link").href = item.link;
+      document.getElementById("tv-status").textContent = `En lecture: titre ${tvState.index + 1} sur ${tvState.items.length}`;
+
+      const playlistButtons = Array.from(document.querySelectorAll(".tv-item"));
+      playlistButtons.forEach((button, idx) => {
+        button.classList.toggle("active", idx === tvState.index);
+        button.setAttribute("aria-current", idx === tvState.index ? "true" : "false");
+      });
+    }
+
+    function moveChannel(step) {
+      if (!tvState.items.length) return;
+      tvState.index = (tvState.index + step + tvState.items.length) % tvState.items.length;
+      updateTvMain();
+    }
+
+    function startAutoplay() {
+      stopAutoplay();
+      syncAutoplayUi();
+      if (!tvState.autoplay || tvState.items.length < 2) return;
+      tvState.timer = setInterval(() => {
+        moveChannel(1);
+      }, 7000);
+    }
+
+    function renderPlaylist() {
+      const playlist = document.getElementById("tv-playlist");
+      playlist.innerHTML = "";
+      tvState.items.forEach((item, idx) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "tv-item";
+        const titleNode = document.createElement("b");
+        titleNode.textContent = item.title;
+        const dateNode = document.createElement("span");
+        dateNode.textContent = formatDate(item.pubDate);
+        button.appendChild(titleNode);
+        button.appendChild(dateNode);
+        button.addEventListener("click", () => {
+          tvState.index = idx;
+          updateTvMain();
+          startAutoplay();
+        });
+        playlist.appendChild(button);
+      });
+    }
+
+    function bindTvControls() {
+      const prevButton = document.getElementById("tv-prev");
+      const nextButton = document.getElementById("tv-next");
+      const autoplayButton = document.getElementById("tv-toggle-autoplay");
+
+      prevButton.addEventListener("click", () => {
+        moveChannel(-1);
+        startAutoplay();
+      });
+
+      nextButton.addEventListener("click", () => {
+        moveChannel(1);
+        startAutoplay();
+      });
+
+      autoplayButton.addEventListener("click", () => {
+        tvState.autoplay = !tvState.autoplay;
+        autoplayButton.textContent = tvState.autoplay ? "Pause auto" : "Reprendre auto";
+        autoplayButton.setAttribute("aria-pressed", tvState.autoplay ? "true" : "false");
+        document.getElementById("tv-status").textContent = tvState.autoplay
+          ? "Mode auto active: changement de canal toutes les 7 secondes."
+          : "Mode auto en pause: controle manuel actif.";
+        startAutoplay();
+      });
+
+      document.addEventListener("keydown", (event) => {
+        const activeTag = document.activeElement?.tagName || "";
+        if (activeTag === "INPUT" || activeTag === "TEXTAREA") return;
+
+        if (event.key === "ArrowLeft") {
+          event.preventDefault();
+          moveChannel(-1);
+          startAutoplay();
+        }
+
+        if (event.key === "ArrowRight") {
+          event.preventDefault();
+          moveChannel(1);
+          startAutoplay();
+        }
+
+        if (event.key === " ") {
+          event.preventDefault();
+          autoplayButton.click();
+        }
+      });
+    }
+
+    async function initCryptoTv() {
+      const sourceNode = document.getElementById("tv-feed-source");
+      const statusNode = document.getElementById("tv-status");
+      sourceNode.textContent = "Connexion au flux...";
+
+      const feed = await loadCryptoFeed();
+      tvState.items = feed.items;
+      tvState.index = 0;
+      sourceNode.textContent = feed.source;
+      statusNode.textContent = feed.fallback
+        ? "Flux distant indisponible: affichage du mode degrade local."
+        : "Flux en direct actif: navigation interactive prete.";
+
+      renderPlaylist();
+      updateTvMain();
+      setTicker(tvState.items);
+      bindTvControls();
+      updateTvClock();
+      setInterval(updateTvClock, 1000);
+      startAutoplay();
+    }
+
+    async function bootstrap() {
+      await render();
+      await initCryptoTv();
+    }
+
+    bootstrap();
   </script>
   <script src="https://chab974.github.io/site-principal/menu/menu.js" defer></script>
 </body>
