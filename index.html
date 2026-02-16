@@ -403,6 +403,26 @@
       text-wrap: balance;
     }
 
+    .tv-headline-link {
+      color: inherit;
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: color 0.16s ease, border-color 0.16s ease;
+    }
+
+    .tv-headline-link:hover,
+    .tv-headline-link:focus-visible {
+      color: #cbe8ff;
+      border-bottom-color: rgba(147, 197, 253, 0.7);
+      outline: none;
+    }
+
+    .tv-headline-link.unavailable {
+      opacity: 0.65;
+      pointer-events: none;
+      border-bottom-color: transparent;
+    }
+
     .tv-meta {
       margin: 0;
       color: #9bb5d2;
@@ -503,6 +523,20 @@
       font-size: 0.8rem;
     }
 
+    .tv-item.unavailable {
+      opacity: 0.56;
+      cursor: not-allowed;
+      border-left-color: #45556e;
+    }
+
+    .tv-item.unavailable:hover,
+    .tv-item.unavailable:focus-visible {
+      transform: none;
+      border-color: transparent;
+      background: rgba(255, 255, 255, 0.02);
+      box-shadow: none;
+    }
+
     .tv-controls {
       margin-top: 13px;
       display: flex;
@@ -541,6 +575,12 @@
       box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.14);
       transform: translateY(-1px);
       outline: none;
+    }
+
+    .btn.disabled {
+      opacity: 0.55;
+      pointer-events: none;
+      cursor: not-allowed;
     }
 
     .tv-status {
@@ -655,7 +695,7 @@
         <div class="tv-head">
           <div class="tv-head-left">
             <div class="tv-live">Live</div>
-            <div class="tv-breaking">Breaking crypto</div>
+            <div class="tv-breaking">Breaking News</div>
           </div>
           <div class="tv-head-right">
             <span class="tv-clock" id="tv-clock">--:--:--</span>
@@ -666,16 +706,16 @@
         <div class="tv-layout">
           <section class="tv-screen" aria-live="polite">
             <span class="tv-channel" id="tv-channel-indicator">Canal 1</span>
-            <h3 id="tv-headline">Chargement des titres crypto...</h3>
+            <h3><a id="tv-headline-link" class="tv-headline-link unavailable" target="_blank" rel="noopener noreferrer">Chargement des titres multi-actus...</a></h3>
             <p class="tv-meta" id="tv-meta">Mise a jour en cours</p>
             <p class="tv-desc" id="tv-description">Connexion au flux RSS LeLezard en cours.</p>
             <p class="tv-details" id="tv-details">Le mode detail se charge pour afficher un extrait plus complet de l'article.</p>
             <div class="tv-actions">
-              <a class="btn primary" id="tv-open-link" href="https://www.lelezard.com/communiques-rss/crypto-monnaies" target="_blank" rel="noopener noreferrer">Lire la source</a>
+              <a class="btn primary disabled" id="tv-open-link" aria-disabled="true" target="_blank" rel="noopener noreferrer">Lire l'article</a>
             </div>
           </section>
 
-          <aside class="tv-playlist" id="tv-playlist" aria-label="Playlist des titres crypto"></aside>
+          <aside class="tv-playlist" id="tv-playlist" aria-label="Playlist des titres multi-actus"></aside>
         </div>
 
         <div class="tv-controls">
@@ -881,6 +921,9 @@
       autoplay: true,
       timer: null
     };
+    const FEED_FETCH_TIMEOUT_MS = 4000;
+    const FEED_CACHE_KEY = "sitePrincipalTvFeedCacheV1";
+    const FEED_CACHE_TTL_MS = 10 * 60 * 1000;
 
     function cleanText(raw, max = 220) {
       const plain = String(raw || "")
@@ -906,7 +949,7 @@
     function normalizeItem(item, sourceLabel) {
       return {
         title: cleanText(item.title, 120),
-        link: item.link || primaryFeedUrl,
+        link: typeof item.link === "string" ? item.link.trim() : "",
         pubDate: item.pubDate || item.pubDateUtc || "",
         description: cleanText(item.description || item.contentSnippet || item.content, 340),
         details: cleanText(item.content || item.description || item.contentSnippet, 760),
@@ -914,25 +957,73 @@
       };
     }
 
-    async function fetchFeed(feedConfig) {
-      const rssToJson = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedConfig.url)}&count=12`;
+    function getValidArticleUrl(rawUrl) {
+      if (!rawUrl || typeof rawUrl !== "string") return "";
       try {
-        const response = await fetch(rssToJson, { cache: "no-store" });
+        const parsed = new URL(rawUrl, window.location.href);
+        if (!["http:", "https:"].includes(parsed.protocol)) return "";
+        if (parsed.pathname.includes("/communiques-rss/")) return "";
+        return parsed.toString();
+      } catch (error) {
+        return "";
+      }
+    }
+
+    function getFallbackItems() {
+      return fallbackFeed.map((item) => normalizeItem(item, item.sourceLabel));
+    }
+
+    function fetchWithTimeout(url, options = {}, timeoutMs = FEED_FETCH_TIMEOUT_MS) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeoutMs);
+      return fetch(url, { ...options, signal: controller.signal })
+        .finally(() => clearTimeout(timer));
+    }
+
+    function readFeedCache() {
+      try {
+        const raw = localStorage.getItem(FEED_CACHE_KEY);
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        if (!parsed || !Array.isArray(parsed.items) || !parsed.savedAt) return null;
+        if (Date.now() - Number(parsed.savedAt) > FEED_CACHE_TTL_MS) return null;
+        return parsed;
+      } catch (error) {
+        return null;
+      }
+    }
+
+    function writeFeedCache(items, source) {
+      try {
+        localStorage.setItem(FEED_CACHE_KEY, JSON.stringify({
+          items,
+          source,
+          savedAt: Date.now()
+        }));
+      } catch (error) {
+        // Ignore storage quota or privacy-mode errors.
+      }
+    }
+
+    async function fetchFeed(feedConfig) {
+      const rssToJson = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedConfig.url)}`;
+      try {
+        const response = await fetchWithTimeout(rssToJson, { cache: "no-store" }, FEED_FETCH_TIMEOUT_MS);
         if (!response.ok) throw new Error("rss2json unavailable");
         const payload = await response.json();
         if (payload.status !== "ok" || !Array.isArray(payload.items) || payload.items.length === 0) {
           throw new Error("rss2json returned empty data");
         }
-        return payload.items.slice(0, 12).map((item) => normalizeItem(item, feedConfig.label));
+        return payload.items.map((item) => normalizeItem(item, feedConfig.label));
       } catch (firstError) {
         try {
           const allOrigins = `https://api.allorigins.win/raw?url=${encodeURIComponent(feedConfig.url)}`;
-          const xmlResponse = await fetch(allOrigins, { cache: "no-store" });
+          const xmlResponse = await fetchWithTimeout(allOrigins, { cache: "no-store" }, 3000);
           if (!xmlResponse.ok) throw new Error("allorigins unavailable");
           const xmlText = await xmlResponse.text();
           const parser = new DOMParser();
           const doc = parser.parseFromString(xmlText, "application/xml");
-          const nodes = Array.from(doc.querySelectorAll("item")).slice(0, 12);
+          const nodes = Array.from(doc.querySelectorAll("item"));
           if (nodes.length === 0) throw new Error("rss xml parse failed");
           return nodes.map((node) =>
             normalizeItem({
@@ -959,13 +1050,13 @@
       if (mergedItems.length > 0) {
         mergedItems.sort((a, b) => parseSortableDate(b.pubDate) - parseSortableDate(a.pubDate));
         return {
-          items: mergedItems.slice(0, 18),
+          items: mergedItems,
           source: "LeLezard: Crypto-monnaies + Science & Technologie",
           fallback: false
         };
       }
       return {
-        items: fallbackFeed.map((item) => normalizeItem(item, item.sourceLabel)),
+        items: getFallbackItems(),
         source: "Selection locale (mode degrade)",
         fallback: true
       };
@@ -997,13 +1088,35 @@
     function updateTvMain() {
       if (!tvState.items.length) return;
       const item = tvState.items[tvState.index];
+      const sourceLabel = item.sourceLabel || "LeLezard";
+      const detailsText = item.details || item.description || "Aucun detail disponible.";
+      const articleUrl = getValidArticleUrl(item.link);
+      const headlineLink = document.getElementById("tv-headline-link");
+      const openLink = document.getElementById("tv-open-link");
       document.getElementById("tv-channel-indicator").textContent = `Canal ${tvState.index + 1}/${tvState.items.length}`;
-      document.getElementById("tv-headline").textContent = item.title;
-      document.getElementById("tv-meta").textContent = `Source: ${item.sourceLabel} | ${formatDate(item.pubDate)}`;
+      headlineLink.textContent = item.title;
+      document.getElementById("tv-meta").textContent = `Source: ${sourceLabel} | ${formatDate(item.pubDate)}`;
       document.getElementById("tv-description").textContent = item.description;
-      document.getElementById("tv-details").textContent = item.details;
-      document.getElementById("tv-open-link").href = item.link;
-      document.getElementById("tv-status").textContent = `En lecture: titre ${tvState.index + 1} sur ${tvState.items.length}`;
+      document.getElementById("tv-details").textContent = detailsText;
+      document.getElementById("tv-status").textContent = articleUrl
+        ? `En lecture: titre ${tvState.index + 1} sur ${tvState.items.length}`
+        : `En lecture: titre ${tvState.index + 1} sur ${tvState.items.length} | Article indisponible`;
+
+      if (articleUrl) {
+        headlineLink.href = articleUrl;
+        headlineLink.classList.remove("unavailable");
+        headlineLink.removeAttribute("aria-disabled");
+        openLink.href = articleUrl;
+        openLink.classList.remove("disabled");
+        openLink.removeAttribute("aria-disabled");
+      } else {
+        headlineLink.removeAttribute("href");
+        headlineLink.classList.add("unavailable");
+        headlineLink.setAttribute("aria-disabled", "true");
+        openLink.removeAttribute("href");
+        openLink.classList.add("disabled");
+        openLink.setAttribute("aria-disabled", "true");
+      }
 
       const playlistButtons = Array.from(document.querySelectorAll(".tv-item"));
       playlistButtons.forEach((button, idx) => {
@@ -1031,21 +1144,33 @@
       const playlist = document.getElementById("tv-playlist");
       playlist.innerHTML = "";
       tvState.items.forEach((item, idx) => {
-        const button = document.createElement("button");
-        button.type = "button";
-        button.className = "tv-item";
+        const articleUrl = getValidArticleUrl(item.link);
+        const card = articleUrl ? document.createElement("a") : document.createElement("button");
+        card.className = "tv-item";
+        if (articleUrl) {
+          card.href = articleUrl;
+          card.target = "_blank";
+          card.rel = "noopener noreferrer";
+        } else {
+          card.type = "button";
+          card.classList.add("unavailable");
+          card.title = "Article indisponible";
+        }
         const titleNode = document.createElement("b");
         titleNode.textContent = item.title;
         const dateNode = document.createElement("span");
-        dateNode.textContent = formatDate(item.pubDate);
-        button.appendChild(titleNode);
-        button.appendChild(dateNode);
-        button.addEventListener("click", () => {
+        dateNode.textContent = articleUrl ? formatDate(item.pubDate) : `${formatDate(item.pubDate)} | Article indisponible`;
+        card.appendChild(titleNode);
+        card.appendChild(dateNode);
+        card.addEventListener("click", (event) => {
           tvState.index = idx;
           updateTvMain();
           startAutoplay();
+          if (!articleUrl) {
+            event.preventDefault();
+          }
         });
-        playlist.appendChild(button);
+        playlist.appendChild(card);
       });
     }
 
@@ -1100,15 +1225,15 @@
     async function initCryptoTv() {
       const sourceNode = document.getElementById("tv-feed-source");
       const statusNode = document.getElementById("tv-status");
-      sourceNode.textContent = "Connexion au flux...";
-
-      const feed = await loadCryptoFeed();
-      tvState.items = feed.items;
+      const cached = readFeedCache();
+      const immediateItems = (cached && cached.items.length > 0 ? cached.items : getFallbackItems())
+        .map((item) => normalizeItem(item, item.sourceLabel || "LeLezard"));
+      tvState.items = immediateItems;
       tvState.index = 0;
-      sourceNode.textContent = feed.source;
-      statusNode.textContent = feed.fallback
-        ? "Flux distant indisponible: affichage du mode degrade local."
-        : "Flux en direct actif: navigation interactive prete.";
+      sourceNode.textContent = cached ? `Cache local: ${cached.source}` : "Affichage instantane local";
+      statusNode.textContent = cached
+        ? "Affichage instantane depuis le cache. Synchronisation en cours..."
+        : "Affichage instantane en mode local. Synchronisation en cours...";
 
       renderPlaylist();
       updateTvMain();
@@ -1116,6 +1241,23 @@
       updateTvClock();
       setInterval(updateTvClock, 1000);
       startAutoplay();
+
+      const feed = await loadCryptoFeed();
+      if (!feed || !feed.items || feed.items.length === 0) return;
+
+      tvState.items = feed.items;
+      tvState.index = 0;
+      sourceNode.textContent = feed.source;
+      statusNode.textContent = feed.fallback
+        ? "Flux distant indisponible: affichage du mode degrade local."
+        : "Flux en direct synchronise.";
+      renderPlaylist();
+      updateTvMain();
+      startAutoplay();
+
+      if (!feed.fallback) {
+        writeFeedCache(feed.items, feed.source);
+      }
     }
 
     async function bootstrap() {
