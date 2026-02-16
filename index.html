@@ -356,7 +356,7 @@
       background:
         radial-gradient(circle at 20% 10%, rgba(56, 189, 248, 0.11), transparent 35%),
         linear-gradient(160deg, rgba(6, 12, 23, 0.98), rgba(10, 17, 30, 0.96));
-      min-height: 292px;
+      min-height: 360px;
       display: flex;
       flex-direction: column;
       gap: 11px;
@@ -421,29 +421,13 @@
       z-index: 1;
     }
 
-    .tv-signal {
-      margin-top: auto;
-      border: 1px solid #2d4568;
-      border-radius: 999px;
-      background: rgba(9, 17, 33, 0.7);
-      height: 7px;
-      overflow: hidden;
+    .tv-details {
+      margin: 0;
+      color: #9ec3e3;
+      line-height: 1.55;
       position: relative;
       z-index: 1;
-    }
-
-    #tv-signal-bar {
-      display: block;
-      height: 100%;
-      width: 100%;
-      background: linear-gradient(90deg, #0ea5e9, #22d3ee, #34d399);
-      transform-origin: left center;
-      animation: tvSignal 7s linear infinite;
-    }
-
-    @keyframes tvSignal {
-      0% { transform: scaleX(0); }
-      100% { transform: scaleX(1); }
+      font-size: 0.96rem;
     }
 
     .tv-actions {
@@ -582,51 +566,6 @@
       box-shadow: 0 0 8px rgba(245, 158, 11, 0.75);
     }
 
-    .tv-ticker {
-      margin-top: 14px;
-      border: 1px solid #243957;
-      border-radius: 12px;
-      overflow: hidden;
-      background: linear-gradient(90deg, rgba(134, 11, 20, 0.76), rgba(8, 12, 23, 0.84));
-      position: relative;
-      z-index: 1;
-      display: grid;
-      grid-template-columns: auto 1fr;
-    }
-
-    .tv-ticker-label {
-      border-right: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(239, 68, 68, 0.18);
-      color: #ffe4e6;
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
-      display: inline-flex;
-      align-items: center;
-      padding: 0 12px;
-      min-height: 42px;
-      white-space: nowrap;
-    }
-
-    .tv-ticker-track-wrap {
-      overflow: hidden;
-    }
-
-    .tv-ticker-track {
-      display: inline-block;
-      white-space: nowrap;
-      padding: 10px 0;
-      color: #d8ebff;
-      animation: tickerMove var(--ticker-duration, 36s) linear infinite;
-      will-change: transform;
-    }
-
-    @keyframes tickerMove {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-
     @keyframes tvBlink {
       to { opacity: 0.4; }
     }
@@ -670,13 +609,6 @@
       .tv-shell {
         padding: 16px;
       }
-      .tv-ticker {
-        grid-template-columns: 1fr;
-      }
-      .tv-ticker-label {
-        border-right: none;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      }
     }
   </style>
 </head>
@@ -714,9 +646,9 @@
 
   <section class="feed-tv" aria-labelledby="feed-tv-title">
     <div class="wrap">
-      <h2 class="section-title" id="feed-tv-title">Flux Crypto en direct</h2>
+      <h2 class="section-title" id="feed-tv-title">Flux Crypto + Science/Tech en direct</h2>
       <p class="feed-tv-intro">
-        Vue TV interactive du flux <strong>LeLezard crypto-monnaies</strong> : navigation canal par canal, defilement automatique et bandeau continu.
+        Vue TV interactive des flux <strong>LeLezard crypto-monnaies</strong> et <strong>science-technologie</strong> : navigation canal par canal, defilement automatique et lecture detaillee sans bandeau fatigant.
       </p>
 
       <article class="tv-shell">
@@ -737,7 +669,7 @@
             <h3 id="tv-headline">Chargement des titres crypto...</h3>
             <p class="tv-meta" id="tv-meta">Mise a jour en cours</p>
             <p class="tv-desc" id="tv-description">Connexion au flux RSS LeLezard en cours.</p>
-            <div class="tv-signal"><span id="tv-signal-bar"></span></div>
+            <p class="tv-details" id="tv-details">Le mode detail se charge pour afficher un extrait plus complet de l'article.</p>
             <div class="tv-actions">
               <a class="btn primary" id="tv-open-link" href="https://www.lelezard.com/communiques-rss/crypto-monnaies" target="_blank" rel="noopener noreferrer">Lire la source</a>
             </div>
@@ -753,13 +685,6 @@
             <button type="button" class="tv-btn" id="tv-toggle-autoplay" aria-pressed="true">Pause auto</button>
           </div>
           <p class="tv-status"><span class="tv-state-dot" id="tv-state-dot"></span><span id="tv-status">Initialisation du flux...</span></p>
-        </div>
-
-        <div class="tv-ticker" aria-hidden="true">
-          <div class="tv-ticker-label">Ticker</div>
-          <div class="tv-ticker-track-wrap">
-            <div class="tv-ticker-track" id="tv-ticker-track"></div>
-          </div>
         </div>
       </article>
     </div>
@@ -836,25 +761,117 @@
       document.getElementById("hero-app-count").textContent = String(apps.length);
     }
 
-    const cryptoFeedUrl = "https://www.lelezard.com/communiques-rss/crypto-monnaies";
+    const feedConfigs = [
+      {
+        id: "crypto",
+        label: "Crypto-monnaies",
+        url: "https://www.lelezard.com/communiques-rss/crypto-monnaies"
+      },
+      {
+        id: "science-tech",
+        label: "Science & Technologie",
+        url: "https://www.lelezard.com/communiques-rss/science-technologie"
+      }
+    ];
+    const primaryFeedUrl = feedConfigs[0].url;
     const fallbackFeed = [
       {
         title: "Bitcoin et Ethereum gardent un marche nerveux",
-        link: cryptoFeedUrl,
+        link: primaryFeedUrl,
         pubDate: new Date().toISOString(),
-        description: "Surveillance locale activee: impossible de charger le flux distant pour le moment."
+        description: "Surveillance locale activee: impossible de charger le flux distant pour le moment.",
+        sourceLabel: "Crypto-monnaies"
       },
       {
         title: "Adoption institutionnelle: hausse des annonces de produits crypto",
-        link: cryptoFeedUrl,
+        link: primaryFeedUrl,
         pubDate: new Date().toISOString(),
-        description: "Le hub conserve un mode degrade avec lecture locale en attendant la source live."
+        description: "Le hub conserve un mode degrade avec lecture locale en attendant la source live.",
+        sourceLabel: "Crypto-monnaies"
       },
       {
         title: "Regulation: la conformite devient un facteur cle des plateformes",
-        link: cryptoFeedUrl,
+        link: primaryFeedUrl,
         pubDate: new Date().toISOString(),
-        description: "Les emissions de communiques montrent une priorite sur la transparence et les reserves."
+        description: "Les emissions de communiques montrent une priorite sur la transparence et les reserves.",
+        sourceLabel: "Crypto-monnaies"
+      },
+      {
+        title: "Tokenisation des actifs: les pilotes se multiplient",
+        link: primaryFeedUrl,
+        pubDate: new Date().toISOString(),
+        description: "Plusieurs acteurs annoncent des pilotes de tokenisation sur obligations, immobilier et matieres premieres.",
+        sourceLabel: "Crypto-monnaies"
+      },
+      {
+        title: "Concurrence des exchanges: bataille sur les frais et la transparence",
+        link: primaryFeedUrl,
+        pubDate: new Date().toISOString(),
+        description: "Les plateformes mettent en avant des preuves de reserves et de nouveaux standards de securite utilisateur.",
+        sourceLabel: "Crypto-monnaies"
+      },
+      {
+        title: "Stablecoins: les annonces de conformite accelerent",
+        link: primaryFeedUrl,
+        pubDate: new Date().toISOString(),
+        description: "Le marche suit de pres les ajustements reglementaires qui impactent les usages de paiement et de tresorerie.",
+        sourceLabel: "Crypto-monnaies"
+      },
+      {
+        title: "Mining et energie: optimisation des couts et flexibilite reseau",
+        link: primaryFeedUrl,
+        pubDate: new Date().toISOString(),
+        description: "Les communiques mettent l'accent sur l'efficacite energetique et les partenariats avec des producteurs locaux.",
+        sourceLabel: "Crypto-monnaies"
+      },
+      {
+        title: "Web3 entreprise: focus sur les cas d'usage B2B",
+        link: primaryFeedUrl,
+        pubDate: new Date().toISOString(),
+        description: "Tracabilite, certification documentaire et automatisation des contrats dominent les annonces recentes.",
+        sourceLabel: "Crypto-monnaies"
+      },
+      {
+        title: "Portefeuilles numeriques: UX et recuperation de compte en progression",
+        link: primaryFeedUrl,
+        pubDate: new Date().toISOString(),
+        description: "Les nouveaux produits visent une adoption grand public avec moins de friction et plus de securite.",
+        sourceLabel: "Crypto-monnaies"
+      },
+      {
+        title: "Infrastructure blockchain: reprise des annonces de scalabilite",
+        link: primaryFeedUrl,
+        pubDate: new Date().toISOString(),
+        description: "Les equipes techniques annoncent des gains de debit et des baisses de latence pour les applications temps reel.",
+        sourceLabel: "Crypto-monnaies"
+      },
+      {
+        title: "IA et recherche appliquee: nouvelles collaborations industrielles",
+        link: "https://www.lelezard.com/communiques-rss/science-technologie",
+        pubDate: new Date().toISOString(),
+        description: "Des annonces mettent en avant des partenariats entre laboratoires et entreprises pour accelerer le transfert technologique.",
+        sourceLabel: "Science & Technologie"
+      },
+      {
+        title: "Robotique: progression des usages dans la logistique et la sante",
+        link: "https://www.lelezard.com/communiques-rss/science-technologie",
+        pubDate: new Date().toISOString(),
+        description: "Les communiques recentes soulignent la fiabilite operationnelle et l'amelioration de la precision des systemes.",
+        sourceLabel: "Science & Technologie"
+      },
+      {
+        title: "Cybersecurite: hausse des investissements sur la protection des donnees",
+        link: "https://www.lelezard.com/communiques-rss/science-technologie",
+        pubDate: new Date().toISOString(),
+        description: "Le secteur technologique renforce les plans de reponse aux incidents et les architectures zero-trust.",
+        sourceLabel: "Science & Technologie"
+      },
+      {
+        title: "Cloud et calcul scientifique: acceleration des plateformes hybrides",
+        link: "https://www.lelezard.com/communiques-rss/science-technologie",
+        pubDate: new Date().toISOString(),
+        description: "Les annonces de science-technologie confirment l'essor des infrastructures evolutives pour les workloads intensifs.",
+        sourceLabel: "Science & Technologie"
       }
     ];
 
@@ -886,17 +903,19 @@
       }).format(parsed);
     }
 
-    function normalizeItem(item) {
+    function normalizeItem(item, sourceLabel) {
       return {
         title: cleanText(item.title, 120),
-        link: item.link || cryptoFeedUrl,
+        link: item.link || primaryFeedUrl,
         pubDate: item.pubDate || item.pubDateUtc || "",
-        description: cleanText(item.description || item.content || item.contentSnippet, 240)
+        description: cleanText(item.description || item.contentSnippet || item.content, 340),
+        details: cleanText(item.content || item.description || item.contentSnippet, 760),
+        sourceLabel: sourceLabel || "LeLezard"
       };
     }
 
-    async function loadCryptoFeed() {
-      const rssToJson = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(cryptoFeedUrl)}&count=12`;
+    async function fetchFeed(feedConfig) {
+      const rssToJson = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedConfig.url)}&count=12`;
       try {
         const response = await fetch(rssToJson, { cache: "no-store" });
         if (!response.ok) throw new Error("rss2json unavailable");
@@ -904,14 +923,10 @@
         if (payload.status !== "ok" || !Array.isArray(payload.items) || payload.items.length === 0) {
           throw new Error("rss2json returned empty data");
         }
-        return {
-          items: payload.items.slice(0, 12).map(normalizeItem),
-          source: "LeLezard RSS via rss2json",
-          fallback: false
-        };
+        return payload.items.slice(0, 12).map((item) => normalizeItem(item, feedConfig.label));
       } catch (firstError) {
         try {
-          const allOrigins = `https://api.allorigins.win/raw?url=${encodeURIComponent(cryptoFeedUrl)}`;
+          const allOrigins = `https://api.allorigins.win/raw?url=${encodeURIComponent(feedConfig.url)}`;
           const xmlResponse = await fetch(allOrigins, { cache: "no-store" });
           if (!xmlResponse.ok) throw new Error("allorigins unavailable");
           const xmlText = await xmlResponse.text();
@@ -919,36 +934,41 @@
           const doc = parser.parseFromString(xmlText, "application/xml");
           const nodes = Array.from(doc.querySelectorAll("item")).slice(0, 12);
           if (nodes.length === 0) throw new Error("rss xml parse failed");
-          const parsedItems = nodes.map((node) =>
+          return nodes.map((node) =>
             normalizeItem({
               title: node.querySelector("title")?.textContent || "",
-              link: node.querySelector("link")?.textContent || cryptoFeedUrl,
+              link: node.querySelector("link")?.textContent || feedConfig.url,
               pubDate: node.querySelector("pubDate")?.textContent || "",
               description: node.querySelector("description")?.textContent || ""
-            })
+            }, feedConfig.label)
           );
-          return {
-            items: parsedItems,
-            source: "LeLezard RSS via allorigins",
-            fallback: false
-          };
         } catch (secondError) {
-          return {
-            items: fallbackFeed.map(normalizeItem),
-            source: "Selection locale (mode degrade)",
-            fallback: true
-          };
+          return [];
         }
       }
     }
 
-    function setTicker(items) {
-      const track = document.getElementById("tv-ticker-track");
-      const headlines = items.map((item) => item.title).join("  \u25cf  ");
-      const doubled = `${headlines}  \u25cf  ${headlines}`;
-      track.textContent = doubled;
-      const duration = Math.max(28, items.length * 5);
-      track.style.setProperty("--ticker-duration", `${duration}s`);
+    function parseSortableDate(value) {
+      const parsed = new Date(value || "");
+      return Number.isNaN(parsed.getTime()) ? 0 : parsed.getTime();
+    }
+
+    async function loadCryptoFeed() {
+      const allFeeds = await Promise.all(feedConfigs.map((feedConfig) => fetchFeed(feedConfig)));
+      const mergedItems = allFeeds.flat();
+      if (mergedItems.length > 0) {
+        mergedItems.sort((a, b) => parseSortableDate(b.pubDate) - parseSortableDate(a.pubDate));
+        return {
+          items: mergedItems.slice(0, 18),
+          source: "LeLezard: Crypto-monnaies + Science & Technologie",
+          fallback: false
+        };
+      }
+      return {
+        items: fallbackFeed.map((item) => normalizeItem(item, item.sourceLabel)),
+        source: "Selection locale (mode degrade)",
+        fallback: true
+      };
     }
 
     function updateTvClock() {
@@ -964,9 +984,7 @@
 
     function syncAutoplayUi() {
       const dot = document.getElementById("tv-state-dot");
-      const signal = document.getElementById("tv-signal-bar");
       if (dot) dot.classList.toggle("paused", !tvState.autoplay);
-      if (signal) signal.style.animationPlayState = tvState.autoplay ? "running" : "paused";
     }
 
     function stopAutoplay() {
@@ -981,8 +999,9 @@
       const item = tvState.items[tvState.index];
       document.getElementById("tv-channel-indicator").textContent = `Canal ${tvState.index + 1}/${tvState.items.length}`;
       document.getElementById("tv-headline").textContent = item.title;
-      document.getElementById("tv-meta").textContent = `Source: LeLezard | ${formatDate(item.pubDate)}`;
+      document.getElementById("tv-meta").textContent = `Source: ${item.sourceLabel} | ${formatDate(item.pubDate)}`;
       document.getElementById("tv-description").textContent = item.description;
+      document.getElementById("tv-details").textContent = item.details;
       document.getElementById("tv-open-link").href = item.link;
       document.getElementById("tv-status").textContent = `En lecture: titre ${tvState.index + 1} sur ${tvState.items.length}`;
 
@@ -1093,7 +1112,6 @@
 
       renderPlaylist();
       updateTvMain();
-      setTicker(tvState.items);
       bindTvControls();
       updateTvClock();
       setInterval(updateTvClock, 1000);
