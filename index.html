@@ -478,6 +478,7 @@
     }
 
     .tv-item {
+      display: block;
       width: 100%;
       text-align: left;
       border: 1px solid transparent;
@@ -490,6 +491,7 @@
       cursor: pointer;
       transition: border-color 0.18s ease, transform 0.18s ease, background 0.18s ease;
       font: inherit;
+      text-decoration: none;
     }
 
     .tv-item:last-child {
@@ -521,6 +523,17 @@
     .tv-item span {
       color: var(--muted);
       font-size: 0.8rem;
+    }
+
+    .tv-empty {
+      margin: 0;
+      border: 1px dashed #476080;
+      border-radius: 10px;
+      padding: 12px;
+      color: #b7cce0;
+      font-size: 0.88rem;
+      line-height: 1.45;
+      background: rgba(255, 255, 255, 0.02);
     }
 
     .tv-item.unavailable {
@@ -1143,16 +1156,19 @@
     function renderPlaylist() {
       const playlist = document.getElementById("tv-playlist");
       playlist.innerHTML = "";
+      if (!tvState.items.length) {
+        const emptyState = document.createElement("p");
+        emptyState.className = "tv-empty";
+        emptyState.textContent = "Aucun article disponible pour le moment.";
+        playlist.appendChild(emptyState);
+        return;
+      }
       tvState.items.forEach((item, idx) => {
         const articleUrl = getValidArticleUrl(item.link);
-        const card = articleUrl ? document.createElement("a") : document.createElement("button");
+        const card = document.createElement("button");
+        card.type = "button";
         card.className = "tv-item";
-        if (articleUrl) {
-          card.href = articleUrl;
-          card.target = "_blank";
-          card.rel = "noopener noreferrer";
-        } else {
-          card.type = "button";
+        if (!articleUrl) {
           card.classList.add("unavailable");
           card.title = "Article indisponible";
         }
@@ -1166,7 +1182,12 @@
           tvState.index = idx;
           updateTvMain();
           startAutoplay();
-          if (!articleUrl) {
+          if (articleUrl) {
+            const opened = window.open(articleUrl, "_blank", "noopener,noreferrer");
+            if (opened) {
+              opened.opener = null;
+            }
+          } else {
             event.preventDefault();
           }
         });
