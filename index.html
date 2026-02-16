@@ -722,9 +722,9 @@
 
   <section class="feed-tv" aria-labelledby="feed-tv-title">
     <div class="wrap">
-      <h2 class="section-title" id="feed-tv-title">Flux Crypto + Science/Tech en direct</h2>
+      <h2 class="section-title" id="feed-tv-title">Flux Crypto + Science/Tech + Environnement</h2>
       <p class="feed-tv-intro">
-        Vue TV interactive des flux <strong>LeLezard crypto-monnaies</strong> et <strong>science-technologie</strong> : navigation canal par canal, defilement automatique et lecture detaillee sans bandeau fatigant.
+        Vue TV interactive des flux <strong>LeLezard crypto-monnaies</strong>, <strong>science-technologie</strong> et <strong>environnement</strong> : navigation canal par canal, defilement automatique et lecture detaillee sans bandeau fatigant.
       </p>
 
       <article class="tv-shell">
@@ -847,6 +847,11 @@
         id: "science-tech",
         label: "Science & Technologie",
         url: "https://www.lelezard.com/communiques-rss/science-technologie"
+      },
+      {
+        id: "environment",
+        label: "Environnement",
+        url: "https://www.lelezard.com/communiques-rss/environnement"
       }
     ];
     const primaryFeedUrl = feedConfigs[0].url;
@@ -948,6 +953,27 @@
         pubDate: new Date().toISOString(),
         description: "Les annonces de science-technologie confirment l'essor des infrastructures evolutives pour les workloads intensifs.",
         sourceLabel: "Science & Technologie"
+      },
+      {
+        title: "Transition energetique: nouvelles annonces sur l'efficacite industrielle",
+        link: "https://www.lelezard.com/communiques-rss/environnement",
+        pubDate: new Date().toISOString(),
+        description: "Le flux environnement met en avant des projets de reduction d'emissions et d'optimisation des ressources.",
+        sourceLabel: "Environnement"
+      },
+      {
+        title: "Eau et biodiversite: initiatives territoriales en hausse",
+        link: "https://www.lelezard.com/communiques-rss/environnement",
+        pubDate: new Date().toISOString(),
+        description: "Des programmes locaux annoncent des actions concretes sur la qualite de l'eau et la restauration d'habitats naturels.",
+        sourceLabel: "Environnement"
+      },
+      {
+        title: "Economie circulaire: acceleration des filieres de reutilisation",
+        link: "https://www.lelezard.com/communiques-rss/environnement",
+        pubDate: new Date().toISOString(),
+        description: "Les entreprises communiquent davantage sur les chaines de valeur bas carbone et le recyclage avance des materiaux.",
+        sourceLabel: "Environnement"
       }
     ];
 
@@ -1087,7 +1113,7 @@
         mergedItems.sort((a, b) => parseSortableDate(b.pubDate) - parseSortableDate(a.pubDate));
         return {
           items: mergedItems,
-          source: "LeLezard: Crypto-monnaies + Science & Technologie",
+          source: "LeLezard: Crypto-monnaies + Science & Technologie + Environnement",
           fallback: false
         };
       }
