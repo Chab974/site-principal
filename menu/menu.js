@@ -8,11 +8,11 @@
   var FALLBACK_CONFIG = {
     brand: "Portail IA",
     items: [
-      { id: "hub", label: "Site principal", url: "https://chab974.github.io/site-principal/" },
-      { id: "autoroute", label: "Auto ecole de l'IA", url: "https://chab974.github.io/ia-notre-nouvelle-autoroute/" },
+      { id: "hub", label: "Site principal", url: "https://site-principal-five.vercel.app/" },
+      { id: "autoroute", label: "Auto ecole de l'IA", url: "https://ia-notre-nouvelle-autoroute.vercel.app/" },
       { id: "quiz", label: "Quizz IA", url: "https://chab974.github.io/quizz-IA/" },
       { id: "neurones", label: "Reseau Neurones", url: "https://chab974.github.io/reseau-neurones-spatial-guide/" },
-      { id: "dorking", label: "Dorking Lab", url: "https://chab974.github.io/laboratoire-google-dorking-osint/" }
+      { id: "dorking", label: "Dorking Lab", url: "https://dorking-lab.vercel.app/" }
     ]
   };
 
