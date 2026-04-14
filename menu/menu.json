@@ -4,12 +4,12 @@
     {
       "id": "hub",
       "label": "Site principal",
-      "url": "https://chab974.github.io/site-principal/"
+      "url": "https://site-principal-five.vercel.app/"
     },
     {
       "id": "autoroute",
       "label": "Auto ecole de l'IA",
-      "url": "https://chab974.github.io/ia-notre-nouvelle-autoroute/"
+      "url": "https://ia-notre-nouvelle-autoroute.vercel.app/"
     },
     {
       "id": "quiz",
@@ -24,7 +24,7 @@
     {
       "id": "dorking",
       "label": "Dorking Lab",
-      "url": "https://chab974.github.io/laboratoire-google-dorking-osint/"
+      "url": "https://dorking-lab.vercel.app/"
     }
   ]
 }
